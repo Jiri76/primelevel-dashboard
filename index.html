@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>PrimeLevel — Create Your Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  /* Design tokens pulled directly from screens/JobFormScreen.js + theme/colors.js
+     -- not re-derived, the exact same locked values used across the app. */
+  :root {
+    --navy: #1E2633;
+    --white: #F9F9FA;
+    --gold: #B29B68;
+    --error: #E45858;
+    --input-bg: #2A3441;
+    --placeholder: #8A93A3;
+    --border: #3A4453;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--navy);
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100%;
+  }
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 60px 20px 60px;
+  }
+  h1 {
+    color: var(--gold);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    margin: 0 0 8px;
+  }
+  .subtitle {
+    color: var(--placeholder);
+    font-size: 15px;
+    line-height: 1.5;
+    margin: 0 0 20px;
+  }
+  label {
+    display: block;
+    color: var(--white);
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 6px;
+    margin-top: 32px;
+  }
+  input {
+    display: block;
+    width: 100%;
+    height: 48px;
+    background: var(--input-bg);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 15px;
+    border: 1px solid var(--border);
+  }
+  input::placeholder { color: var(--placeholder); }
+  input:focus { outline: none; border-color: var(--gold); }
+  .error {
+    color: var(--error);
+    font-size: 15px;
+    margin-top: 4px;
+  }
+  .submit-error { margin-top: 16px; text-align: center; }
+  button {
+    display: block;
+    width: 100%;
+    height: 48px;
+    background: var(--gold);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    margin-top: 28px;
+    cursor: pointer;
+    /* No vertical padding on top of the fixed height -- adding it clipped
+       descenders (the "g" in "Send Magic Link") on the app's own button;
+       centering via flex here instead, same fix, same reasoning. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  button:disabled { opacity: 0.6; cursor: default; }
+  .success {
+    padding-top: 159px;
+    text-align: center;
+  }
+  .check-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 36px;
+    border: 2px solid var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  .check-mark {
+    color: var(--white);
+    font-weight: 700;
+    font-size: 36px;
+  }
+  .success-title {
+    color: var(--white);
+    font-weight: 700;
+    font-size: 44px;
+    margin-top: 36px;
+  }
+  .success-body {
+    color: var(--placeholder);
+    font-size: 15px;
+    line-height: 1.5;
+    margin-top: 16px;
+    padding: 0 24px;
+  }
+</style>
+</head>
+<body>
+  <div class="container" id="formView">
+    <h1>Create Your Profile</h1>
+    <p class="subtitle">This is what appears on every invoice you send — takes about a minute.</p>
+
+    <form id="profileForm">
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="you@example.com" autocomplete="email" />
+      <div class="error" id="err-email"></div>
+
+      <label for="personalName">Your Name</label>
+      <input id="personalName" type="text" placeholder="e.g. John Smith" autocomplete="name" />
+      <div class="error" id="err-personalName"></div>
+
+      <label for="businessName">Business Name</label>
+      <input id="businessName" type="text" placeholder="e.g. J&amp;S Heating Services" autocomplete="organization" />
+      <div class="error" id="err-businessName"></div>
+
+      <label for="businessAddress">Business Address</label>
+      <input id="businessAddress" type="text" placeholder="e.g. 12 High Street, London, SW1A 1AA" autocomplete="street-address" />
+      <div class="error" id="err-businessAddress"></div>
+
+      <label for="sortCode">Bank Sort Code</label>
+      <input id="sortCode" type="text" placeholder="00-00-00" inputmode="numeric" maxlength="8" />
+      <div class="error" id="err-sortCode"></div>
+
+      <label for="accountNumber">Bank Account Number</label>
+      <input id="accountNumber" type="text" placeholder="12345678" inputmode="numeric" maxlength="8" />
+      <div class="error" id="err-accountNumber"></div>
+
+      <div class="error submit-error" id="err-submit"></div>
+
+      <button type="submit" id="submitBtn">Create Profile</button>
+    </form>
+  </div>
+
+  <div class="container success" id="successView" style="display: none;">
+    <div class="check-circle"><span class="check-mark">&#10003;</span></div>
+    <div class="success-title">All Set</div>
+    <p class="success-body">Your profile is saved. Now download the PrimeLevel app and sign in with the same email to get started.</p>
+  </div>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const SUPABASE_URL = 'https://kenlhcatkjthhzuaznpg.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_-gt5PPGL45s3hRsfOosH6g_q3yP-b-_';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    const EMAIL_REGEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+    const SORT_CODE_REGEX = /^\d{6}$/;
+    const ACCOUNT_NUMBER_REGEX = /^\d{8}$/;
+
+    const form = document.getElementById('profileForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function fieldValue(id) {
+      return document.getElementById(id).value.trim();
+    }
+    function setError(id, message) {
+      document.getElementById('err-' + id).textContent = message || '';
+    }
+    function clearErrors() {
+      ['email', 'personalName', 'businessName', 'businessAddress', 'sortCode', 'accountNumber', 'submit']
+        .forEach((id) => setError(id, ''));
+    }
+
+    // Sort code auto-formats as NN-NN-NN while typing, matching the app's own
+    // habit of formatting UK-specific fields (see the phone-number field).
+    document.getElementById('sortCode').addEventListener('input', (e) => {
+      const digits = e.target.value.replace(/\D/g, '').slice(0, 6);
+      e.target.value = digits.match(/.{1,2}/g)?.join('-') ?? digits;
+    });
+    document.getElementById('accountNumber').addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 8);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearErrors();
+
+      const email = fieldValue('email');
+      const personalName = fieldValue('personalName');
+      const businessName = fieldValue('businessName');
+      const businessAddress = fieldValue('businessAddress');
+      const sortCode = fieldValue('sortCode').replace(/-/g, '');
+      const accountNumber = fieldValue('accountNumber');
+
+      let hasError = false;
+      if (!email) { setError('email', 'Email is required.'); hasError = true; }
+      else if (!EMAIL_REGEX.test(email)) { setError('email', 'Please enter a valid email address.'); hasError = true; }
+      if (!personalName) { setError('personalName', 'Your name is required.'); hasError = true; }
+      if (!businessName) { setError('businessName', 'Business name is required.'); hasError = true; }
+      if (!businessAddress) { setError('businessAddress', 'Business address is required.'); hasError = true; }
+      if (!SORT_CODE_REGEX.test(sortCode)) { setError('sortCode', 'Sort code must be 6 digits.'); hasError = true; }
+      if (!ACCOUNT_NUMBER_REGEX.test(accountNumber)) { setError('accountNumber', 'Account number must be 8 digits.'); hasError = true; }
+      if (hasError) return;
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Creating…';
+
+      try {
+        // Creates the auth user (and, via the existing database trigger, the
+        // matching accounts row) and sends the sign-in email -- the exact
+        // same mechanism the app itself already uses, not a separate one.
+        const { error: otpError } = await supabase.auth.signInWithOtp({ email });
+        if (otpError) throw otpError;
+
+        const { error: rpcError } = await supabase.rpc('complete_profile_signup', {
+          p_email: email,
+          p_personal_name: personalName,
+          p_business_name: businessName,
+          p_business_address: businessAddress,
+          p_bank_sort_code: sortCode,
+          p_bank_account_number: accountNumber,
+        });
+        if (rpcError) throw rpcError;
+
+        document.getElementById('formView').style.display = 'none';
+        document.getElementById('successView').style.display = 'block';
+      } catch (err) {
+        setError('submit', 'Could not create your profile. Please check your details and try again.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Profile';
+      }
+    });
+  </script>
+</body>
+</html>
