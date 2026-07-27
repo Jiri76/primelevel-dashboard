@@ -43,7 +43,7 @@
     color: var(--placeholder);
     font-size: 15px;
     line-height: 1.5;
-    margin: 0 0 20px;
+    margin: 0 0 32px;
   }
   label {
     display: block;
@@ -52,6 +52,12 @@
     font-size: 16px;
     margin-bottom: 6px;
     margin-top: 32px;
+  }
+  /* First label's own top margin would stack on top of the subtitle's
+     bottom margin above -- zeroed so that single 32px gap is explicit
+     and not left to margin-collapse behavior across the form boundary. */
+  label:first-of-type {
+    margin-top: 0;
   }
   input {
     display: block;
@@ -85,7 +91,7 @@
     font-size: 16px;
     border: none;
     border-radius: 8px;
-    margin-top: 28px;
+    margin-top: 32px;
     cursor: pointer;
     /* No vertical padding on top of the fixed height -- adding it clipped
        descenders (the "g" in "Send Magic Link") on the app's own button;
