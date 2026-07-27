@@ -159,6 +159,10 @@
       <input id="accountNumber" type="text" placeholder="12345678" inputmode="numeric" maxlength="8" />
       <div class="error" id="err-accountNumber"></div>
 
+      <label for="vatNumber">VAT Number <span style="color: var(--placeholder); font-weight: 400;">(optional)</span></label>
+      <input id="vatNumber" type="text" placeholder="e.g. GB123456789" autocomplete="off" />
+      <div class="error" id="err-vatNumber"></div>
+
       <div class="error submit-error" id="err-submit"></div>
 
       <button type="submit" id="submitBtn">Create Profile</button>
@@ -192,7 +196,7 @@
       document.getElementById('err-' + id).textContent = message || '';
     }
     function clearErrors() {
-      ['email', 'personalName', 'businessName', 'businessAddress', 'sortCode', 'accountNumber', 'submit']
+      ['email', 'personalName', 'businessName', 'businessAddress', 'sortCode', 'accountNumber', 'vatNumber', 'submit']
         .forEach((id) => setError(id, ''));
     }
 
@@ -216,6 +220,7 @@
       const businessAddress = fieldValue('businessAddress');
       const sortCode = fieldValue('sortCode').replace(/-/g, '');
       const accountNumber = fieldValue('accountNumber');
+      const vatNumber = fieldValue('vatNumber');
 
       let hasError = false;
       if (!email) { setError('email', 'Email is required.'); hasError = true; }
@@ -244,6 +249,7 @@
           p_business_address: businessAddress,
           p_bank_sort_code: sortCode,
           p_bank_account_number: accountNumber,
+          p_vat_number: vatNumber || null,
         });
         if (rpcError) throw rpcError;
 
