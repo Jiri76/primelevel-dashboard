@@ -91,7 +91,11 @@
     font-size: 16px;
     border: none;
     border-radius: 8px;
-    margin-top: 32px;
+    /* Matches the box-to-box distance used everywhere else (32px label
+       margin-top + the label's own height + 6px margin-bottom = 57px) --
+       every other field has a label sitting in that gap, this one doesn't,
+       so its margin has to be bigger to keep the box-to-box spacing equal. */
+    margin-top: 57px;
     cursor: pointer;
     /* No vertical padding on top of the fixed height -- adding it clipped
        descenders (the "g" in "Send Magic Link") on the app's own button;
