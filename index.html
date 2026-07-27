@@ -272,5 +272,29 @@
       }
     });
   </script>
+
+  <!-- TEMPORARY spacing-proof ruler -- remove once spacing is confirmed. -->
+  <script>
+    document.fonts.ready.then(() => {
+      function addRuler(topEl, bottomEl, label) {
+        const top = topEl.getBoundingClientRect().bottom + window.scrollY;
+        const bottom = bottomEl.getBoundingClientRect().top + window.scrollY;
+        const gap = Math.round(bottom - top);
+        const line1 = document.createElement('div');
+        line1.style.cssText = `position:absolute; left:0; top:${top}px; width:100vw; height:2px; background:#FF4D4D; z-index:9999;`;
+        const line2 = document.createElement('div');
+        line2.style.cssText = `position:absolute; left:0; top:${bottom}px; width:100vw; height:2px; background:#FF4D4D; z-index:9999;`;
+        const tag = document.createElement('div');
+        tag.textContent = label + ' = ' + gap + 'px';
+        tag.style.cssText = `position:absolute; left:8px; top:${(top+bottom)/2 - 10}px; color:#fff; background:#FF4D4D; font-weight:bold; font-size:13px; padding:2px 8px; border-radius:4px; z-index:9999;`;
+        document.body.append(line1, line2, tag);
+      }
+      addRuler(document.querySelector('h1'), document.querySelector('.subtitle'), 'title -> subtitle');
+      addRuler(document.querySelector('.subtitle'), document.getElementById('email'), 'subtitle -> email');
+      addRuler(document.getElementById('email'), document.getElementById('personalName'), 'email -> your name');
+      addRuler(document.getElementById('sortCode'), document.getElementById('accountNumber'), 'sortCode -> acctNum');
+      addRuler(document.getElementById('vatNumber'), document.getElementById('submitBtn'), 'VAT -> button');
+    });
+  </script>
 </body>
 </html>
