@@ -195,6 +195,7 @@
     const EMAIL_REGEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
     const SORT_CODE_REGEX = /^\d{6}$/;
     const ACCOUNT_NUMBER_REGEX = /^\d{8}$/;
+    const VAT_NUMBER_REGEX = /^GB\d{9}$/;
 
     const form = document.getElementById('profileForm');
     const submitBtn = document.getElementById('submitBtn');
@@ -219,6 +220,13 @@
     document.getElementById('accountNumber').addEventListener('input', (e) => {
       e.target.value = e.target.value.replace(/\D/g, '').slice(0, 8);
     });
+    // Letters/digits only, auto-uppercased, capped at "GB" + 9 digits (11
+    // chars) -- the real submit-time format check (VAT_NUMBER_REGEX) is what
+    // actually enforces the GB prefix; this just stops obviously-invalid
+    // characters and runaway length while typing.
+    document.getElementById('vatNumber').addEventListener('input', (e) => {
+      e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11);
+    });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -240,6 +248,7 @@
       if (!businessAddress) { setError('businessAddress', 'Business address is required.'); hasError = true; }
       if (!SORT_CODE_REGEX.test(sortCode)) { setError('sortCode', 'Sort code must be 6 digits.'); hasError = true; }
       if (!ACCOUNT_NUMBER_REGEX.test(accountNumber)) { setError('accountNumber', 'Account number must be 8 digits.'); hasError = true; }
+      if (vatNumber && !VAT_NUMBER_REGEX.test(vatNumber)) { setError('vatNumber', 'VAT number must start with GB, followed by 9 digits (e.g. GB123456789).'); hasError = true; }
       if (hasError) return;
 
       submitBtn.disabled = true;
