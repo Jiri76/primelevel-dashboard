@@ -256,9 +256,19 @@
 
       try {
         // Creates the auth user (and, via the existing database trigger, the
-        // matching accounts row) and sends the sign-in email -- the exact
-        // same mechanism the app itself already uses, not a separate one.
-        const { error: otpError } = await supabase.auth.signInWithOtp({ email });
+        // matching accounts row) and sends a sign-in email as a side effect
+        // -- but that email is NOT the intended sign-in path here (the real
+        // one is signing into the app itself with the same email, which uses
+        // its own working magic-link flow via SignInScreen.js). Without an
+        // explicit emailRedirectTo, Supabase falls back to the project's
+        // default Site URL, which is a stale localhost dev address -- giving
+        // it this page's own URL instead means clicking that email (even
+        // though it's not the intended step) lands somewhere real, not a
+        // broken "connection refused" page.
+        const { error: otpError } = await supabase.auth.signInWithOtp({
+          email,
+          options: { emailRedirectTo: window.location.origin + window.location.pathname },
+        });
         if (otpError) throw otpError;
 
         const { error: rpcError } = await supabase.rpc('complete_profile_signup', {
